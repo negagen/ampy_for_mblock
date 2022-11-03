@@ -11,9 +11,11 @@
   "dependencies": {
     "babel-loader": "^9.1.0",
     "buffer": "^6.0.3",
+    "dedent": "^0.7.0",
     "denque": "^2.1.0",
     "json-prune": "^1.1.0",
     "process": "^0.11.10",
+    "serialport": "^10.4.0",
     "stream-browserify": "^3.0.0",
     "webpack": "^5.74.0"
   },
