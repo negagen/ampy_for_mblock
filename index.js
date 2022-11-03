@@ -1,6 +1,7 @@
 const { Duplex } = require('stream') 
 const { Buffer } = require('buffer')
 
+
 class mBlockSerial extends Duplex {
     constructor(device, opts){
         this.device = device
@@ -13,9 +14,5 @@ class mBlockSerial extends Duplex {
     }
 }
 
-module.exports = {
-    buffer: require('buffer'),
-    stream: require('stream'),
-    prune: require('json-prune'),
-    mblockserial: mBlockSerial,
-}
+
+module.exports = mBlockSerial

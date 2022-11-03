@@ -4,9 +4,15 @@ module.exports = {
       stream: "stream-browserify",
     },
   },
-  entry: "./index.js",
+  entry: {
+    mBlockSerial:'./index.js',
+    Denque:'denque',
+    Buffer:'buffer',
+    stream:'stream',
+    jsonPrune:'json-prune'
+  },
   output: {
-    filename: "libraries.js",
+    filename: "[name].js",
     library: {
       type: "umd",
       name: "libraries",
