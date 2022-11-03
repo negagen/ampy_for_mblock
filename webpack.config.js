@@ -1,7 +1,10 @@
+const webpack = require('webpack')
+
 module.exports = {
   resolve: {
     fallback: {
-      stream: "stream-browserify",
+      stream: require.resolve('stream-browserify'),
+      process: require.resolve('process/browser'),  // <- this
     },
   },
   entry: {
@@ -28,4 +31,9 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new webpack.ProvidePlugin({
+      process: "process/browser"
+    }),
+  ]
 };
