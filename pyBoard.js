@@ -116,7 +116,7 @@ class Pyboard {
         for (let retry = 0; retry < 5; retry++) {
             this.serial.write("\r\x01");
             let data = await this.readUntil(1, "raw REPL; CTRL-B to exit\r\n>");
-            if (data.match("raw REPL; CTRL-B to exit\r\n>")) {
+            if (data?.match("raw REPL; CTRL-B to exit\r\n>")) {
                 break;
             } else {
                 if (retry >= 4) {
@@ -129,7 +129,7 @@ class Pyboard {
 
         this.serial.write("\x04");
         let data = await this.readUntil(1, "soft reboot\r\n");
-        if (!data.match("soft reboot\r\n")) {
+        if (!data?.match("soft reboot\r\n")) {
             console.log(data);
             throw new PyboardError("could not enter raw repl");
         }
@@ -141,7 +141,7 @@ class Pyboard {
 
         data = await this.readUntil(1, "raw REPL; CTRL-B to exit\r\n");
         
-        if (!data.match("raw REPL; CTRL-B to exit\r\n")) {
+        if (!data?.match("raw REPL; CTRL-B to exit\r\n")) {
             console.log(data);
             throw new PyboardError("could not enter raw repl");
         }
@@ -197,7 +197,7 @@ class Pyboard {
 
         data = await this.readUntil(2,"OK");
 
-        if (!data.match("OK")) {
+        if (!data?.match("OK")) {
             throw new PyboardError("could not exec command");
         }
     }
