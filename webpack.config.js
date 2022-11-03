@@ -15,7 +15,7 @@ module.exports = {
     filename: "[name].js",
     library: {
       type: "umd",
-      name: "libraries",
+      name: "[name]",
     },
     globalObject: "this",
   },
