@@ -8,11 +8,13 @@ module.exports = {
     },
   },
   entry: {
-    mBlockSerial:'./index.js',
+    mBlockSerial:'./mBlockSerial.js',
     Denque:'denque',
     Buffer:'buffer',
     stream:'stream',
-    jsonPrune:'json-prune'
+    jsonPrune:'json-prune',
+    pyboard: './pyBoard.js',
+    files: './files.js'
   },
   output: {
     filename: "[name].js",
