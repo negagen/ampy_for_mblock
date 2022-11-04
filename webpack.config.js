@@ -5,6 +5,7 @@ module.exports = {
     fallback: {
       stream: require.resolve('stream-browserify'),
       process: require.resolve('process/browser'),  // <- this
+      buffer: require.resolve('buffer/'),
     },
   },
   entry: {
@@ -37,5 +38,8 @@ module.exports = {
     new webpack.ProvidePlugin({
       process: "process/browser"
     }),
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
+    })
   ]
 };

@@ -21,7 +21,6 @@ Or:
     node pyboard.js test.py
 */
 
-const process = require("process");
 const Denque = require("denque");
 const { InterByteTimeoutParser } = require("@serialport/parser-inter-byte-timeout");
 
