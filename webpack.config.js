@@ -15,7 +15,8 @@ module.exports = {
     stream:'stream',
     jsonPrune:'json-prune',
     pyboard: './pyBoard.js',
-    files: './files.js'
+    files: './files.js',
+    flat: 'flat',
   },
   output: {
     filename: "[name].js",
