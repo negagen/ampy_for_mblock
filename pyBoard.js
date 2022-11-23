@@ -51,12 +51,21 @@ class Pyboard {
     }
 
     readUntil(min_num_bytes, ending, timeout=10000, data_consumer=null) {
-        return new Promise((resolve, reject) => {
-            let that = this;
+        const that = this;
+
+        const ontimeout = new Promise((resolve, reject)=>{
+            setTimeout(()=>{
+                let ret = that.serial.fifo.splice(0, that.serial.fifo.length)
+                that.parser.off("data", wrapListener);
+                return resolve(ret?.join(""));
+            },timeout)
+        })
+
+        const onfound = new Promise((resolve, reject) => {
 
             data_consumer && data_consumer(that.serial.fifo.toArray().join(""))
             
-            this.serial.read(min_num_bytes)?.split("").forEach((ch) => {
+            that.serial.read(min_num_bytes)?.split("").forEach((ch) => {
                 that.serial.fifo.push(ch);
             });
 
@@ -66,12 +75,6 @@ class Pyboard {
                 let ret = that.serial.fifo.splice(0, match.index + ending.length)
                 return resolve(ret.join(""));
             }
-            
-            let onTimeout = setTimeout(() => {
-                let ret = that.serial.fifo.splice(0, that.serial.fifo.length)
-                that.parser.off("data", wrapListener);
-                return resolve(ret?.join(""));
-            }, timeout);
 
             function wrapListener(data) {
                 data.split("").forEach((ch) => {5
@@ -93,8 +96,9 @@ class Pyboard {
             }
 
             this.parser.on("data", wrapListener);
-
         });
+
+        return Promise.race([ontimeout, onfound])
     }
 
     async enter_raw_repl() {
