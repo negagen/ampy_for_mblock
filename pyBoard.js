@@ -57,7 +57,7 @@ class Pyboard {
             setTimeout(()=>{
                 let ret = that.serial.fifo.splice(0, that.serial.fifo.length)
                 that.parser.off("data", wrapListener);
-                return resolve(ret?.join(""));
+                resolve(ret?.join(""));
             },timeout)
         })
 
@@ -88,8 +88,8 @@ class Pyboard {
                 if (match) {
                     onTimeout && clearTimeout(onTimeout);
                     let ret = that.serial.fifo.splice(0, match.index + ending.length)
-                    console.log("This is the ending:", ending)
-                    console.log("Returning this:", ret.join(""))
+                    //console.log("This is the ending:", ending)
+                    //console.log("Returning this:", ret.join(""))
                     that.parser.off("data", wrapListener);
                     return resolve(ret.join(""));
                 }
@@ -123,7 +123,7 @@ class Pyboard {
                 break;
             } else {
                 if (retry >= 4) {
-                    console.log(data);
+                    //console.log(data);
                     throw new PyboardError("could not enter raw repl");
                 }
                 await new Promise((resolve) => setTimeout(resolve, 200));
@@ -133,7 +133,7 @@ class Pyboard {
         this.serial.write("\x04");
         let data = await this.readUntil(1, "soft reboot\r\n");
         if (!data?.match("soft reboot\r\n")) {
-            console.log(data);
+            //console.log(data);
             throw new PyboardError("could not enter raw repl");
         }
 
@@ -145,7 +145,7 @@ class Pyboard {
         data = await this.readUntil(1, "raw REPL; CTRL-B to exit\r\n");
         
         if (!data?.match("raw REPL; CTRL-B to exit\r\n")) {
-            console.log(data);
+            //console.log(data);
             throw new PyboardError("could not enter raw repl");
         }
 
