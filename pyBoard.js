@@ -55,14 +55,19 @@ class Pyboard {
 
         const ontimeout = new Promise((resolve, reject)=>{
             setTimeout(()=>{
-                let ret = that.serial.fifo.splice(0, that.serial.fifo.length)
-                that.parser.off("data", wrapListener);
-                resolve(ret?.join(""));
+                try{
+                    let ret = that.serial.fifo.splice(0, that.serial.fifo.length)
+                    that.parser.off("data", wrapListener);
+                    resolve(ret?.join(""));
+                }
+                catch(err){
+                    reject(err)
+                }
             },timeout)
         })
 
         const onfound = new Promise((resolve, reject) => {
-
+            try{
             data_consumer && data_consumer(that.serial.fifo.toArray().join(""))
             
             that.serial.read(min_num_bytes)?.split("").forEach((ch) => {
@@ -77,25 +82,32 @@ class Pyboard {
             }
 
             function wrapListener(data) {
-                data.split("").forEach((ch) => {5
-                    that.serial.fifo.push(ch);
-                });
+                try{
+                    data.split("").forEach((ch) => {5
+                        that.serial.fifo.push(ch);
+                    });
 
-                data_consumer && data_consumer(that.serial.fifo.toArray().join(""))
+                    data_consumer && data_consumer(that.serial.fifo.toArray().join(""))
 
-                let match = that.serial.fifo.toArray().join("").match(ending)
+                    let match = that.serial.fifo.toArray().join("").match(ending)
 
-                if (match) {
-                    onTimeout && clearTimeout(onTimeout);
-                    let ret = that.serial.fifo.splice(0, match.index + ending.length)
-                    //console.log("This is the ending:", ending)
-                    //console.log("Returning this:", ret.join(""))
-                    that.parser.off("data", wrapListener);
-                    return resolve(ret.join(""));
+                    if (match) {
+                        onTimeout && clearTimeout(onTimeout);
+                        let ret = that.serial.fifo.splice(0, match.index + ending.length)
+                        //console.log("This is the ending:", ending)
+                        //console.log("Returning this:", ret.join(""))
+                        that.parser.off("data", wrapListener);
+                        return resolve(ret.join(""));
+                    }
+                } catch(er){
+                    reject(er)
                 }
             }
 
             this.parser.on("data", wrapListener);
+            } catch(er){
+                reject(er)
+            }
         });
 
         return Promise.race([ontimeout, onfound])
