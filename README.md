@@ -43,13 +43,17 @@ Example of custom uploader on mBlock:
 
 ```javascript
 async function uploadHandler(app, device, code, logHandler, progressHandle, finishHandler, errHandler) {
+    // Load the ampy library
     const { MBlockSerial, PyBoard, Files } = loadAmpy();
+
+    // We need to create a new instance of MBlockSerial, PyBoard and Files
     const serial = new MBlockSerial.MBlockSerial(device);
     const board = new PyBoard.Pyboard(serial);
     const files = new Files.Files(board);
 
-    logHandler("uploading file template.py");
+    logHandler("uploading file main.py");
 
+    // Upload the code to the device as main.py
     let progress = 0;
     await filesObj.put("main.py", code, (chunk_size) => {
         progress += chunk_size;
