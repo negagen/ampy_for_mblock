@@ -1,7 +1,7 @@
 // Libraries
 const { Buffer } = require('buffer')
 const { SerialPort } = require('serialport')
-const octabioCommons = require('./index.js')
+const octabioCommons = require('./dist/bundle.js')
 
 // Mocking
 const app = {}
@@ -17,8 +17,7 @@ const serial = new SerialPort({ path: 'COM5', baudRate: 115200 })
 
 /** 
  * We adapt SerialPort to a DeviceContext-like object
- * @type {(data: number[]) => void}
- * 
+ * @type {DeviceContext}
  */
 const device = {
     writeRaw(data) {
@@ -66,8 +65,8 @@ async function uploadHandler(app, device, code, logHandler, progressHandle, fini
         logHandler("resetting board");
         serial.write("\x04");
         logHandler(await pyboard.readUntil(1, "soft reboot\r\n"));
+        device.getReactor().setReceiver(()=>{})
         finishHandler(null);
-
     } catch (er) {
         errHandler(er);
     }

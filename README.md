@@ -1,4 +1,4 @@
-# AMPY for mBlock
+# ampy for mBlock
 
 This is a transcoded version of ampy (<https://github.com/scientifichackers/ampy>) to javascript. It is intended to be used in mBlock (<http://www.mblock.cc/>).
 
@@ -66,7 +66,9 @@ async function uploadHandler(app, device, code, logHandler, progressHandle, fini
     logHandler("resetting board");
     serial.write("\x04");
     logHandler(await pyboard.readUntil(1, "soft reboot\r\n"));
-
+    
+    // Clean up
+    device.getReactor().setReceiver(()=>{})
     finishHandler(null);
 }
 ```
