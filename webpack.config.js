@@ -8,32 +8,15 @@ module.exports = {
       buffer: require.resolve('buffer/'),
     },
   },
-  entry: {
-    mBlockSerial:'./mBlockSerial.js',
-    Denque:'denque',
-    Buffer:'buffer',
-    stream:'stream',
-    jsonPrune:'json-prune',
-    pyboard: './pyBoard.js',
-    files: './files.js',
-    flat: 'flat',
-  },
+  mode: "production",
+  entry: "./index.js",
   output: {
-    filename: "[name].js",
+    filename: "bundle.js",
     library: {
-      type: "umd",
-      name: "[name]",
+      name: "octabioCommons",
+      type: "umd"
     },
     globalObject: "this",
-  },
-  module: {
-    rules: [
-      {
-        test: /\.(js)$/,
-        exclude: /node_modules/,
-        use: "babel-loader",
-      },
-    ],
   },
   plugins: [
     new webpack.ProvidePlugin({
