@@ -37,7 +37,7 @@ while mBlock is supposed to support third-party libraries in the extension build
 
 ## Usage
 
-We use added a adapter called `MBlockSerial` which receives a `DeviceContext` and returns a Serial-like object. This object can be used to communicate with the device.
+We added an adapter called `MBlockSerial` which receives a `DeviceContext` and returns a Serial-like object. This object can be used to communicate with the device.
 
 Example of custom uploader on mBlock:
 
@@ -57,6 +57,8 @@ async function uploadHandler(app, device, code, logHandler, progressHandle, fini
     })
 
     logHandler("file uploaded");
+
+    // Reset the board
     logHandler("resetting board");
     serial.write("\x04");
     logHandler(await pyboard.readUntil(1, "soft reboot\r\n"));
