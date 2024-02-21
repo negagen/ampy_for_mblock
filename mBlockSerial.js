@@ -16,8 +16,12 @@ class MBlockSerial extends Duplex {
     }
 
     _write(chunk, encoding, cb){
-        this.device.writeRaw([...Buffer.from(chunk, encoding)])
-        cb(null)
+        try {
+            this._source.writeRaw([...Buffer.from(chunk, encoding)]);
+            cb(null);
+        } catch (er) {
+            cb(er);
+        }
     }
 
     _read(){
