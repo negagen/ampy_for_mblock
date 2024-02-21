@@ -100,7 +100,7 @@ class Pyboard {
                     let match = that.serial.fifo.toArray().join("").match(ending)
 
                     if (match) {
-                        onTimeout && clearTimeout(onTimeout);
+                        typeof onTimeout !== 'undefined' && clearTimeout(onTimeout);
                         let ret = that.serial.fifo.splice(0, match.index + ending.length)
                         //console.log("This is the ending:", ending)
                         //console.log("Returning this:", ret.join(""))
@@ -112,7 +112,7 @@ class Pyboard {
                 }
             }
 
-            this.parser.on("data", wrapListener);
+            that.parser.on("data", wrapListener);
             } catch(er){
                 reject(er)
             }
