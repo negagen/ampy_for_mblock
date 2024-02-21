@@ -4,7 +4,7 @@ This is a transcoded version of ampy (https://github.com/scientifichackers/ampy)
 
 ## Installation
 
-while mBlock is supposed to support third-party libraries in the extension builder, it is not yet possible to use this library in mBlock. Therefore, you have to use the following workaround:
+While mBlock is supposed to support third-party libraries in the extension builder, it is not yet possible to use this library in mBlock. Therefore, you have to use the following workaround:
 
 1. Compile the library using `npm run build`
 2. From the JSON file in the `dist` folder, copy the content of the `bundle` property.
