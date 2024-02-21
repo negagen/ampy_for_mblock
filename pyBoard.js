@@ -34,8 +34,17 @@ class PyboardError extends Error {
 
 class Pyboard {
     constructor(serial, rawdelay = 0) {
-
         _rawdelay = rawdelay;
+        this.close = this.close.bind(this);
+        this.readUntil = this.readUntil.bind(this);
+        this.enter_raw_repl = this.enter_raw_repl.bind(this);
+        this.exit_raw_repl = this.exit_raw_repl.bind(this);
+        this.exec_raw_no_follow = this.exec_raw_no_follow.bind(this);
+        this.exec_raw = this.exec_raw.bind(this);
+        this.eval = this.eval.bind(this);
+        this.exec_ = this.exec_.bind(this);
+        this.execfile = this.execfile.bind(this);
+        this.get_time = this.get_time.bind(this);
 
         this.serial = serial
         this.parser = this.serial.pipe(
@@ -52,9 +61,8 @@ class Pyboard {
 
     readUntil(min_num_bytes, ending, timeout=10000, data_consumer=null) {
         const that = this;
-
-        const ontimeout = new Promise((resolve, reject)=>{
-            setTimeout(()=>{
+        const ontimeout = new Promise(function(resolve, reject){
+            setTimeout(function(){
                 try{
                     let ret = that.serial.fifo.splice(0, that.serial.fifo.length)
                     that.parser.off("data", wrapListener);
@@ -66,7 +74,7 @@ class Pyboard {
             },timeout)
         })
 
-        const onfound = new Promise((resolve, reject) => {
+        const onfound = new Promise(function(resolve, reject){
             try{
             data_consumer && data_consumer(that.serial.fifo.toArray().join(""))
             
@@ -83,7 +91,7 @@ class Pyboard {
 
             function wrapListener(data) {
                 try{
-                    data.split("").forEach((ch) => {5
+                    data.split("").forEach((ch) => {
                         that.serial.fifo.push(ch);
                     });
 

@@ -1,4 +1,4 @@
-const { PyboardError } = require('./pyboard.js')
+const { PyboardError } = require('./pyBoard.js')
 const { Buffer } = require('buffer')
 const dedent = require('dedent')
 
@@ -13,6 +13,13 @@ class DirectoryExistsError extends Error {
 class Files {
     constructor(pyboard) {
         this._pyboard = pyboard
+        this.get = this.get.bind(this)
+        this.ls = this.ls.bind(this)
+        this.mkdir = this.mkdir.bind(this)
+        this.put = this.put.bind(this)
+        this.rm = this.rm.bind(this)
+        this.rmdir = this.rmdir.bind(this)
+        this.run = this.run.bind(this)
     }
 
     async get(filename) {
