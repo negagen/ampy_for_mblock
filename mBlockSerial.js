@@ -26,4 +26,4 @@ class MBlockSerial extends Duplex {
 }
 
 
-module.exports = mBlockSerial
+module.exports = MBlockSerial
