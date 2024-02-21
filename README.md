@@ -1,6 +1,6 @@
 # AMPY for mBlock
 
-This is a transcoded version of ampy (https://github.com/scientifichackers/ampy) to javascript. It is intended to be used in mBlock (http://www.mblock.cc/).
+This is a transcoded version of ampy (<https://github.com/scientifichackers/ampy>) to javascript. It is intended to be used in mBlock (<http://www.mblock.cc/>).
 
 ## Installation
 
