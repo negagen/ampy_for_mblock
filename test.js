@@ -1,7 +1,7 @@
 // Libraries
 const { Buffer } = require('buffer')
 const { SerialPort } = require('serialport')
-const octabioCommons = require('./dist/bundle.js')
+const octabioCommons = require('./index.js')
 
 // Mocking
 const app = {}
@@ -13,7 +13,7 @@ const errHandler = (err) => console.error(err)
 const loadLibraries = async () => octabioCommons
 
 // Device use real serial port
-const serial = new SerialPort({ path: 'COM7', baudRate: 115200 })
+const serial = new SerialPort({ path: 'COM5', baudRate: 115200 })
 
 /** 
  * We adapt SerialPort to a DeviceContext-like object
@@ -50,98 +50,8 @@ async function uploadHandler(app, device, code, logHandler, progressHandle, fini
     try {
         const octabioCommons = await loadLibraries()
         logHandler("Creating board interface...")
-        const serial = new octabioCommons.mBlockSerial();
-        serial.indexText = 0;
-
-        serial._write = function (chunk, encoding, cb) {
-            try {
-                device.writeRaw([...octabioCommons.Buffer.Buffer.from(chunk, encoding)]);
-                cb(null);
-            } catch (er) {
-                cb(er);
-            }
-        };
-
+        const serial = new octabioCommons.MBlockSerial(device);
         const pyboard = new octabioCommons.PyBoard.Pyboard(serial);
-
-        const rawDataHandler = (data, text) => {
-            serial.push(octabioCommons.Buffer.Buffer.from(data))
-        }
-
-        device.getReactor().setReceiver(rawDataHandler)
-
-
-        const pushToFifo = (data) => {
-            logHandler(data)
-            data.split("").forEach((ch) => {
-                pyboard.serial.fifo.push(ch);
-            });
-        };
-
-        pyboard.parser.on("data", pushToFifo);
-
-        pyboard.readUntil = function (
-            min_num_bytes,
-            ending,
-            timeout = 10000,
-            data_consumer = null
-        ) {
-            const that = pyboard;
-
-            const ontimeout = new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    try {
-                        let ret = that.serial.fifo.splice(0, that.serial.fifo.length);
-                        if (typeof ret !== "undefined" && ret && ret.join)
-                            resolve(ret.join(""));
-                    } catch (err) {
-                        reject(err);
-                    }
-                }, timeout);
-            });
-
-            const onfound = new Promise((resolve, reject) => {
-                try {
-                    data_consumer && data_consumer(that.serial.fifo.toArray().join(""));
-
-                    let match = that.serial.fifo.toArray().join("").match(ending);
-
-                    if (match) {
-                        let ret = that.serial.fifo.splice(0, match.index + ending.length);
-                        return resolve(ret.join(""));
-                    }
-
-                    function wrapListener(data) {
-                        try {
-                            data_consumer &&
-                                data_consumer(that.serial.fifo.toArray().join(""));
-
-                            let match = that.serial.fifo.toArray().join("").match(ending);
-
-                            if (match) {
-                                ontimeout && clearTimeout(ontimeout);
-                                let ret = that.serial.fifo.splice(
-                                    0,
-                                    match.index + ending.length
-                                );
-
-                                that.parser.off("data", wrapListener);
-                                resolve(ret.join(""));
-                            }
-                        } catch (er) {
-                            reject(er);
-                        }
-                    }
-
-                    that.parser.on("data", wrapListener);
-                } catch (er) {
-                    reject(er);
-                }
-            });
-
-            return Promise.race([ontimeout, onfound]);
-        }
-
         const filesObj = new octabioCommons.Files.Files(pyboard);
 
         logHandler("uploading file template.py");
@@ -156,8 +66,6 @@ async function uploadHandler(app, device, code, logHandler, progressHandle, fini
         logHandler("resetting board");
         serial.write("\x04");
         logHandler(await pyboard.readUntil(1, "soft reboot\r\n"));
-        pyboard.parser.off("data", pushToFifo);
-        device.getReactor().setReceiver(() => { })
         finishHandler(null);
 
     } catch (er) {
