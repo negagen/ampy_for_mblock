@@ -47,7 +47,7 @@ async function uploadHandler(app, device, code, logHandler, progressHandle, fini
     const { MBlockSerial, PyBoard, Files } = loadAmpy();
 
     // We need to create a new instance of MBlockSerial, PyBoard and Files
-    const serial = new MBlockSerial.MBlockSerial(device);
+    const serial = new MBlockSerial(device);
     const board = new PyBoard.Pyboard(serial);
     const files = new Files.Files(board);
 
