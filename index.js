@@ -1,7 +1,7 @@
 module.exports = {
-    Files: require('./files.js'),
-    MBlockSerial: require('./mBlockSerial.js'),
-    PyBoard: require('./pyBoard.js'),
+    ...require('./files.js'),
+    ...require('./mBlockSerial.js'),
+    ...require('./pyBoard.js'),
     Denque: require('denque'),
     Stream: require('stream'),
     Buffer: require('buffer'),
