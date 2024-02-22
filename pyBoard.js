@@ -61,6 +61,7 @@ class Pyboard {
 
     readUntil(min_num_bytes, ending, timeout=10000, data_consumer=null) {
         const that = this;
+        let wrapListener = function(){};
         const ontimeout = new Promise(function(resolve, reject){
             setTimeout(function(){
                 try{
@@ -89,7 +90,7 @@ class Pyboard {
                 return resolve(ret.join(""));
             }
 
-            function wrapListener(data) {
+            wrapListener = function(data) {
                 try{
                     data.split("").forEach((ch) => {
                         that.serial.fifo.push(ch);
